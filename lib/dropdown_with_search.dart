@@ -9,11 +9,13 @@ class DropdownWithSearch<T> extends StatelessWidget {
   final TextStyle? selectedItemStyle;
   final TextStyle? dropdownHeadingStyle;
   final TextStyle? itemStyle;
-  final BoxDecoration? decoration, disabledDecoration;
+  // final BoxDecoration? decoration, disabledDecoration;
+  final InputDecoration? inputDecoration, disabledInputDecoration;
   final double? searchBarRadius;
   final double? dialogRadius;
   final bool disabled;
   final String label;
+  final String? Function(String?)? validate;
 
   final Function onChanged;
 
@@ -28,12 +30,13 @@ class DropdownWithSearch<T> extends StatelessWidget {
       this.selectedItemStyle,
       this.dropdownHeadingStyle,
       this.itemStyle,
-      this.decoration,
-      this.disabledDecoration,
+      this.inputDecoration,
+      this.disabledInputDecoration,
       this.searchBarRadius,
       this.dialogRadius,
       required this.label,
-      this.disabled = false})
+      this.disabled = false,
+      this.validate})
       : super(key: key);
 
   @override
@@ -64,33 +67,56 @@ class DropdownWithSearch<T> extends StatelessWidget {
                     }*/
           });
         },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        // child: Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        //   decoration: !disabled
+        //       ? decoration != null
+        //           ? decoration
+        //           : BoxDecoration(
+        //               borderRadius: BorderRadius.all(Radius.circular(5)),
+        //               color: Colors.white,
+        //               border: Border.all(color: Colors.grey.shade300, width: 1))
+        //       : disabledDecoration != null
+        //           ? disabledDecoration
+        //           : BoxDecoration(
+        //               borderRadius: BorderRadius.all(Radius.circular(5)),
+        //               color: Colors.grey.shade300,
+        //               border:
+        //                   Border.all(color: Colors.grey.shade300, width: 1)),
+        //   child: Row(
+        //     children: [
+        //       Expanded(
+        //           child: Text(selected.toString(),
+        //               overflow: TextOverflow.ellipsis,
+        //               style: selectedItemStyle != null
+        //                   ? selectedItemStyle
+        //                   : TextStyle(fontSize: 14))),
+        //       Icon(Icons.keyboard_arrow_down_rounded)
+        //     ],
+        //   ),
+        child: TextFormField(
+          validator: validate,
           decoration: !disabled
-              ? decoration != null
-                  ? decoration
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300, width: 1))
-              : disabledDecoration != null
-                  ? disabledDecoration
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: Colors.grey.shade300,
-                      border:
-                          Border.all(color: Colors.grey.shade300, width: 1)),
-          child: Row(
-            children: [
-              Expanded(
-                  child: Text(selected.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      style: selectedItemStyle != null
+              ? inputDecoration != null
+                  ? inputDecoration
+                  : InputDecoration(
+                      border: UnderlineInputBorder(
+                          // color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade300, width: 1)))
+              : disabledInputDecoration != null
+                  ? disabledInputDecoration
+                  : InputDecoration(
+                      hintStyle: selectedItemStyle != null
                           ? selectedItemStyle
-                          : TextStyle(fontSize: 14))),
-              Icon(Icons.keyboard_arrow_down_rounded)
-            ],
-          ),
+                          : TextStyle(fontSize: 14),
+                      border: UnderlineInputBorder(
+                          // color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade300, width: 1))),
+          initialValue: selected.toString(),
         ),
       ),
     );
